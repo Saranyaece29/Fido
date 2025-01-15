@@ -1,16 +1,19 @@
 from datetime import datetime, timezone
 from fastapi.encoders import isoformat
 from fastapi.testclient import TestClient
+from app.database import create_tables
 from app.main import app
 import base64
 from app.schemas import ProcessAudioResponse
 
 client = TestClient(app)
 
+create_tables() 
+
 def test_process_audio_valid():
     payload = {
         "session_id": "test_session",
-         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "audio_files": [
             {
                 "file_name": "test.wav",
@@ -19,14 +22,15 @@ def test_process_audio_valid():
         ]
     }
     response = client.post("/process-audio", json=payload)
-    #assert response.status_code == 200
-    #assert response.status_code == 400
-    if response.status_code != 200:
-        print(response.json())  # Print the response JSON for debugging
-    assert response.status_code == 200
     response_json = response.json()
-    assert response_json()["status"] == "success"
-    assert len(response_json()["processed_files"]) == 1
+
+    try:
+        assert response.status_code == 200
+        assert response_json["status"] == "success"
+        assert len(response_json["processed_files"]) == 1
+    except AssertionError as e:
+        print(response_json)  # Print the response JSON for debugging
+        raise e
     
 
 def test_process_audio_invalid_base64():
@@ -44,4 +48,3 @@ def test_process_audio_invalid_base64():
     #assert response.status_code == 400
     assert response.status_code == 422  # Expecting 422 Unprocessable Entity
     response_json = response.json()
-
