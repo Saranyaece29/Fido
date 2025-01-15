@@ -6,9 +6,9 @@ setup(
     author="Saranya", 
     author_email="saranyaece29@gmail.com",  
     description="Fido interview assessment",  
-    long_description=open("README.md").read(), 
-    long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/Fido",  
+    #long_description=open("README.md").read(), 
+    #long_description_content_type="text/markdown",
+    url="https://github.com/Saranyaece29/Fido",  
     packages=find_packages(),  
     install_requires=[ 
         "requests>=2.25.1",
