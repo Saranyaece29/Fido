@@ -65,5 +65,7 @@ jobs:
 
       # Package the application
       - name: Build package
-        run: python setup.py
+        run: |
+          pip install build
+          python -m build
 
